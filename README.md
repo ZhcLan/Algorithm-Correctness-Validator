@@ -165,5 +165,5 @@ Validator 样本
 
 # 下载Jar包
 
-[Validator_5.26](https://github.com/ZhcLan/Algorithm-Correctness-Validator/blob/main/validator_5.26.jar)
+[Validator_5.26](https://github.com/ZhcLan/Algorithm-Correctness-Validator/releases/tag/validator)
 
