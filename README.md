@@ -1,13 +1,11 @@
-[TOC]
-
-## Validator 对数器
+# Validator 对数器
 
 算法对数器是一种用于验证算法正确性的测试工具。通过生成大量随机测试数据，可以有效地检测算法在各种情况下的表现，提高算法的可靠性和稳定性。
 
 -   使用算法对数器对算法进行验证，确保算法的正确性；
 -   使用算法对数器对算法进行性能测试，找出潜在的问题并进行优化；
 
-## ACV - 通用算法对数器
+# ACV - 通用算法对数器
 
 基本介绍:
 
@@ -87,25 +85,85 @@ Argument类用于抽象参数,一个Argument对象表示一个参数,如果你�
 -   final Range[] volume 数据量的范围
 -   final Range[] values   数据值的范围
 
-## 关于数据量和数据范围的指定
+# 关于数据量和数据范围的指定
 
 你可以在构造时通过Argument构造函数进行调整数据量`Range[][] volume`和数据范围`Range[][] values`
 
-在指定volume时,你需要注意的是,因为参数的根的大小固定为1,指定volume时第一位用于站位可以随意指定
+在指定volume时,你需要注意的是,因为参数的根的大小固定为1,指定volume时最后一位用于站位可以随意指定
 
-在指定values时,你需要注意的是,第一位代表的含义是,第一个集合中出现的数据元素的个数,所以最后会多出一位空位,你可以随意指定进行站位
+在指定values时,你需要注意的是,第一位用于站位,你可以随意指定
 
 volume和values的占位不可省略,不可省略,不可省略!!! 否则会出现数组越界异常
 
-## 如何使用
+例如对`LinkedList<ArrayList<IntegerPlus[]>>`的volume和values进行指定
+
+```java
+package controller;
+
+import model.config.ValidatorConfig;
+import model.range.Range;
+import model.sample.Argument;
+import model.type.IntegerPlus;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+/**
+ * @BelongsProject: v2_validator
+ * @BelongsPackage: controller
+ * @Author: zhc
+ * @Description:
+ * @Version: 1.0
+ */
+public class Demo {
+    public static String f(LinkedList<ArrayList<IntegerPlus[]>> a) {
+        return "";
+    }
+
+    public static String g(LinkedList<ArrayList<IntegerPlus[]>> a) {
+        return "";
+    }
+	// 特殊的,指定参数约束是,你必须把StringPlus视作集合
+    public static void main(String[] args) {
+        // 1. 创建验证器配置
+        ValidatorConfig config = new ValidatorConfig(1_0000, Demo.class, "f", "g");
+        // 当然,你也可以不写成这种嵌套的写法
+
+        // 2. 创建输入约束
+        Argument argument = new Argument(
+                new Range[]{// volume
+                        new Range(-1, -1),   // 占位
+                        new Range(3, 4),     // LinkedList    有3~4 个元素(ArrayList)
+                        new Range(5, 6),     // ArrayList     有5~6 个元素(IntegerPlus[])
+                        new Range(7, 8)      // IntegerPlus[]  有7~8 个元素(IntegerPlus - 整形)
+                },
+                new Range[]{// value
+                        new Range(-1,-1),    // 第一位表示LinkedList的元素数据范围,它不需要,所以使用(-1,-1)站位,后面同理
+                        new Range(-1,-1),    //
+                        new Range(10,20),    // 表示IntegerPlus[]的每个数据的数值范围,范围为(10,20)之间
+                        new Range(-1,-1)     // 最后一位无效,但是必须写出!
+                }
+        );
+
+        // 3. 激活验证器
+        new Active().active(config,argument);// 第二个参数是 Argument ... args ,是一个边长参数,你必须将所有参数全部传入,否则无法完成反射
+    }
+}
+
+```
+
+Validator 样本
+
+<img width="1388" alt="image" src="https://github.com/ZhcLan/Algorithm-Correctness-Validator/assets/115857104/bf73da5a-2b16-43f6-ad47-34082bcc0bd0">
+
+
+# 如何使用
 
 1.   下载并导入jar包
-2.   与算法匹配的创建ValidatorConfig和Argument对象
+2.   创建与算法匹配的ValidatorConfig和Argument对象
 3.   使用active激活对数器
 
-使用Demo:[UsageDemo](https://github.com/ZhcLan/Algorithm-Correctness-Validator/blob/main/UsageDemo.java)
-
-## 下载
+# 下载Jar包
 
 [Validator_5.26](https://github.com/ZhcLan/Algorithm-Correctness-Validator/blob/main/validator_5.26.jar)
 
