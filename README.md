@@ -155,7 +155,8 @@ public class Demo {
 
 Validator 样本
 
-<img width="1388" alt="image" src="https://github.com/ZhcLan/Algorithm-Correctness-Validator/assets/115857104/bf73da5a-2b16-43f6-ad47-34082bcc0bd0">
+<img width="1393" alt="image" src="https://github.com/ZhcLan/Algorithm-Correctness-Validator/assets/115857104/d66fd1e9-71a0-48e0-a8e4-ed97105685b7">
+
 
 
 # 如何使用
