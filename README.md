@@ -85,6 +85,8 @@ Argument类用于抽象参数,一个Argument对象表示一个参数,如果你�
 -   final Range[] volume 数据量的范围
 -   final Range[] values   数据值的范围
 
+你需要注意的是,对于每个Argument,也就是每一个参数,其最内层(叶子节点)必须是封装好的Plus类型
+
 # 关于数据量和数据范围的指定
 
 你可以在构造时通过Argument构造函数进行调整数据量`Range[][] volume`和数据范围`Range[][] values`
