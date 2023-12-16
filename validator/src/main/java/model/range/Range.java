@@ -73,4 +73,58 @@ public final class Range {
     public void setFate(Fate fate) {
         this.fate = fate;
     }
+
+    /**
+     * Due to the operating system's random scheduling strategy for processes/threads,
+     * the statistics here are inaccurate and inaccurate
+     * <p>
+     * If you want to clearly perceive the difference between the two algorithms in
+     * terms of running time, please zoom in on the number of random samples, but this
+     * will result in a longer running time
+     * <p>
+     * Because the design and implementation of the entire logarithmic device does not
+     * consider the optimization of performance and the large number of internal
+     * reflections will also lead to the degradation of performance, so far, it is all
+     * about the implementation of functions
+     * <p>
+     * Of course, JNI was considered to call C/C++ instead of some of the inefficient
+     * code, but this was not done due to the cross-platform nature of Java and the
+     * complexity of the actual development
+     */
+
+
+    /**
+     * Based on the given minimum and maximum values, a random number is generated
+     *
+     * @param min minimum
+     * @param max maximum
+     * @return a number ,range of min to max
+     */
+    public static double getRandomMinToMax(double min, double max) {
+        //  If the minimum value is equal to the maximum value, the minimum value is returned directly
+        if (min == max) {
+            return (double) min;
+        }
+
+        // If the minimum value is greater than the maximum value, swap the values of both
+        if (min > max) {
+            double t = min;
+            min = max;
+            max = t;
+        }
+        // Generates a random number ranging from minimum to maximum (both minimum and maximum) -> [min,max]
+        return (Math.random() * (max - min + 1)) + min;
+    }
+
+    /**
+     * Based on a given range, a random number is generated
+     *
+     * @param range range objects
+     * @return a number in the range of min to max
+     */
+    public static double getRandomMinToMax(Range range) {
+        return getRandomMinToMax(range.getMin(), range.getMax());
+    }
+
+
 }

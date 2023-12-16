@@ -1,7 +1,6 @@
 package model.util.type;
 
 import model.range.Range;
-import model.util.GlobalUtility;
 
 import java.util.UUID;
 
@@ -16,7 +15,7 @@ public class StringPlus extends ObjectPlus<String, StringPlus> {
     }
 
     public StringPlus() {
-        this(TYPE_PLUS_RANGE, (int) GlobalUtility.getRandomMinToMax(10, 20));
+        this(TYPE_PLUS_RANGE, (int) Range.getRandomMinToMax(10, 20));
     }
 
     public StringPlus(String value) {

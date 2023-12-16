@@ -1,7 +1,6 @@
 package model.util.type;
 
 import model.range.Range;
-import model.util.GlobalUtility;
 
 import java.util.UUID;
 
@@ -21,7 +20,7 @@ public class CharacterPlus extends ObjectPlus<Character, CharacterPlus> {
 
     public CharacterPlus(Range range) {
         this.setUuid(String.valueOf(UUID.randomUUID()));
-        this.value = (char) GlobalUtility.getRandomMinToMax(range);
+        this.value = (char) Range.getRandomMinToMax(range);
     }
 
     public static Character getRandomChar(Range range) {

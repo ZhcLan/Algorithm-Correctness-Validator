@@ -6,7 +6,6 @@ import model.range.Range;
 import model.reflect.ReflectiveInvoker;
 import model.util.type.ObjectPlus;
 import model.util.type.StringPlus;
-import model.util.GlobalUtility;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -28,7 +27,9 @@ public class RPC {
      * @return random sample(Imperfect)
      * @throws ClassNotFoundException If the reflection method does not exist or cannot be found
      */
-    public static Object[][] rpc(ValidatorConfig config, Range[][] volume, Range[][] values, StringBuilder error) throws ClassNotFoundException {
+    public static Object[][] rpc(ValidatorConfig config, Argument[] arguments, Range[][] volume,
+                                 Range[][] values, StringBuilder error)
+            throws ClassNotFoundException {
         // obtains method
         Method method = ReflectiveInvoker.getMethod(config.getClazz(), config.getValidatorMethod());
         // obtains generic parameter types
@@ -39,7 +40,7 @@ public class RPC {
             error.append("{");
             // recursively parse and construct random samples
 
-            args[i] = rsc(types[i], volume, values, i, 0, error, null);
+            args[i] = rsc(arguments, types[i], volume, values, i, 0, error, null);
             error.append("}");
             if (i != types.length - 1) {
                 error.append(",");
@@ -105,8 +106,8 @@ public class RPC {
      * and errorString together form a set of random test samples
      */
     /* unchecked */
-    public static Object[] rsc(Type root, Range[][] volume, Range[][] values, int index, int used,
-                               StringBuilder error/*指定特殊值的字段*/, Range fate)
+    public static Object[] rsc(Argument[] arguments, Type root, Range[][] volume, Range[][] values,
+                               int index, int used, StringBuilder error, Range fate)
             throws ClassNotFoundException {
         Object[] ret = new Object[2];
         try {
@@ -117,7 +118,7 @@ public class RPC {
         } catch (ClassCastException e) {
             if (root instanceof GenericArrayType) {
                 // Generic Array
-                int size = (int) GlobalUtility.getRandomMinToMax(GlobalUtility.arguments[index].getVolume()[used]);
+                int size = (int) Range.getRandomMinToMax(arguments[index].getVolume()[used]);
                 Object array1;
                 Object array2;
 
@@ -128,7 +129,7 @@ public class RPC {
                 array2 = Array.newInstance(componentType, size);
                 error.append("[");
                 for (int i = 0; i < size; i++) {
-                    Object[] subArray = rsc(((GenericArrayType) root).getGenericComponentType(), volume, values, index, used + 1, error, null);
+                    Object[] subArray = rsc(arguments, ((GenericArrayType) root).getGenericComponentType(), volume, values, index, used + 1, error, null);
                     if (i != size - 1) {
                         error.append(",");
                     }
@@ -137,7 +138,7 @@ public class RPC {
                 }
                 error.append("]");
                 try {
-                    if (GlobalUtility.arguments[index].isOrder()) {
+                    if (arguments[index].isOrder()) {
                         Arrays.sort((Object[]) array1);
                         Arrays.sort((Object[]) array2);
                     }
@@ -148,7 +149,7 @@ public class RPC {
                 ret[1] = array2;
             } else if (root instanceof Class && ((Class<?>) root).getComponentType() != null) {
                 // common array
-                int size = (int) GlobalUtility.getRandomMinToMax(GlobalUtility.arguments[index].getVolume()[used]);
+                int size = (int) Range.getRandomMinToMax(arguments[index].getVolume()[used]);
                 Object array1;
                 Object array2;
                 try {
@@ -156,7 +157,7 @@ public class RPC {
                     array2 = Array.newInstance(((Class<?>) root).getComponentType(), size);
                     error.append("[");
                     for (int i = 0; i < size; i++) {
-                        Object[] subArray = rsc(((Class<?>) root).getComponentType(), volume, values, index, used + 1, error, null);
+                        Object[] subArray = rsc(arguments, ((Class<?>) root).getComponentType(), volume, values, index, used + 1, error, null);
                         if (i != size - 1) {
                             error.append(",");
                         }
@@ -171,7 +172,7 @@ public class RPC {
                     assert error != null;
                     error.append("[");
                     for (int i = 0; i < size; i++) {
-                        Object[] subArray = rsc(((Class<?>) root).getComponentType(), volume, values, index, used + 1, error, null);
+                        Object[] subArray = rsc(arguments, ((Class<?>) root).getComponentType(), volume, values, index, used + 1, error, null);
                         if (i != size - 1) {
                             error.append(",");
                         }
@@ -181,7 +182,7 @@ public class RPC {
                     error.append("[");
                 }
                 try {
-                    if (GlobalUtility.arguments[index].isOrder()) {
+                    if (arguments[index].isOrder()) {
                         Arrays.sort((Object[]) array1);
                         Arrays.sort((Object[]) array2);
                     }
@@ -197,7 +198,7 @@ public class RPC {
                 // special process if types is string plus type
                 Range random = values[index][used];
                 if (root.getTypeName().contains("String")) {
-                    int len = (int) GlobalUtility.getRandomMinToMax(volume[index][used]);
+                    int len = (int) Range.getRandomMinToMax(volume[index][used]);
                     ret[0] = new StringPlus(random, len);
                     ret[1] = StringPlus.clone((StringPlus) (ret[0]));
                 } else {
@@ -230,7 +231,7 @@ public class RPC {
             Type valType = types[1];
 
             int count = 0;
-            int size = (int) GlobalUtility.getRandomMinToMax(volume[index][used]);
+            int size = (int) Range.getRandomMinToMax(volume[index][used]);
             error.append("[");
             while (count < size) {
                 Object[] rightKey;
@@ -240,11 +241,11 @@ public class RPC {
                  */
                 error.append("(");
                 do {
-                    rightKey = rsc(keyType, volume, values, index, used + 1, error, null);
+                    rightKey = rsc(arguments, keyType, volume, values, index, used + 1, error, null);
                 } while (map1.containsKey(rightKey[0]));
                 error.append(",");
 
-                Object[] rightVal = rsc(valType, volume, values, index, used + 2, error, null);
+                Object[] rightVal = rsc(arguments, valType, volume, values, index, used + 2, error, null);
 
                 error.append(")");
                 map1.put(rightKey[0], rightVal[0]);
@@ -260,13 +261,13 @@ public class RPC {
             ArrayList<Object> list1 = new ArrayList<>();
             ArrayList<Object> list2 = new ArrayList<>();
             int count = 0;
-            int size = (int) GlobalUtility.getRandomMinToMax(volume[index][used]);
-            Fate fateful = GlobalUtility.arguments[index].getVolume()[used].getFate();
+            int size = (int) Range.getRandomMinToMax(volume[index][used]);
+            Fate fateful = arguments[index].getVolume()[used].getFate();
             if (fateful != null) {
                 int total = 0;
                 int[] times = new int[fateful.getTimes().length];
                 for (int i = 0; i < fateful.getTimes().length; i++) {
-                    times[i] = (int) GlobalUtility.getRandomMinToMax(fateful.getTimes()[i]);
+                    times[i] = (int) Range.getRandomMinToMax(fateful.getTimes()[i]);
                     total += times[i];
                 }
                 // 1. The number of special values is total and fill in the value
@@ -276,7 +277,7 @@ public class RPC {
                     for (int j = 0; j < times[i]; j++) {
                         Range range = fateful.getValue()[i];
                         // Returns two leaf nodes
-                        Object[] objects = rsc(colType, volume, values, index, used + 1, error, range);
+                        Object[] objects = rsc(arguments, colType, volume, values, index, used + 1, error, range);
                         error.append(",");
                         list1.add(objects[0]);
                         list2.add(objects[1]);
@@ -287,7 +288,7 @@ public class RPC {
                 //  2. The remaining count - total number is filled in with random values
                 while (count < size) {
                     // Assign a value to fate first
-                    Object[] objects = rsc(colType, volume, values, index, used + 1, error, null);
+                    Object[] objects = rsc(arguments, colType, volume, values, index, used + 1, error, null);
                     if (count != size - 1) {
                         error.append(",");
                     }
@@ -297,7 +298,7 @@ public class RPC {
                 }
             } else {
                 while (count < size) {
-                    Object[] objects = rsc(colType, volume, values, index, used + 1, error, null);
+                    Object[] objects = rsc(arguments, colType, volume, values, index, used + 1, error, null);
                     if (count != size - 1) {
                         error.append(",");
                     }
@@ -307,7 +308,7 @@ public class RPC {
                 }
             }
             // If the parameters are ordered, sort them
-            if (GlobalUtility.arguments[index].isOrder()) {
+            if (arguments[index].isOrder()) {
                 list1.sort((o1, o2) -> ((ObjectPlus<?, ?>) o1).compareTo(o2));
                 list2.sort((o1, o2) -> ((ObjectPlus<?, ?>) o1).compareTo(o2));
             }

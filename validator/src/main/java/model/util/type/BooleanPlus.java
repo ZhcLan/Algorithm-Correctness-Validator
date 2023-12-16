@@ -1,7 +1,6 @@
 package model.util.type;
 
 import model.range.Range;
-import model.util.GlobalUtility;
 
 import java.util.UUID;
 
@@ -28,7 +27,7 @@ public class BooleanPlus extends ObjectPlus<Boolean, BooleanPlus> {
     // if random > 0 return true
     // if random = 0 return Math.random() < 0.5
     private Boolean getRandomBoolean(Range range) {
-        double random = GlobalUtility.getRandomMinToMax(range);
+        double random = Range.getRandomMinToMax(range);
         if (random < 0) {
             return false;
         } else if (random > 0) {

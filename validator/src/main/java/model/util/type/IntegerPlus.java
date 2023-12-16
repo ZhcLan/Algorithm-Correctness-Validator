@@ -1,7 +1,6 @@
 package model.util.type;
 
 import model.range.Range;
-import model.util.GlobalUtility;
 
 import java.util.UUID;
 
@@ -23,7 +22,7 @@ public class IntegerPlus extends ObjectPlus<Integer, IntegerPlus> {
 
     public IntegerPlus(Range range) {
         this.setUuid(String.valueOf(UUID.randomUUID()));
-        this.value = (int) GlobalUtility.getRandomMinToMax(range);
+        this.value = (int) Range.getRandomMinToMax(range);
     }
 
 }

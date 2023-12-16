@@ -1,7 +1,6 @@
 package model.util.type;
 
 import model.range.Range;
-import model.util.GlobalUtility;
 
 import java.util.UUID;
 
@@ -22,7 +21,7 @@ public class DoublePlus extends ObjectPlus<Double, DoublePlus> {
 
     public DoublePlus(Range range) {
         this.setUuid(String.valueOf(UUID.randomUUID()));
-        this.value = GlobalUtility.getRandomMinToMax(range);
+        this.value = Range.getRandomMinToMax(range);
     }
 
 }

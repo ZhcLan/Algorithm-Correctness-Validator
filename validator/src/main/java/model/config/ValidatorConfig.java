@@ -1,11 +1,13 @@
 package model.config;
 
+import model.out.Out;
 import model.out.fomat.ConsoleTable;
 import model.out.fomat.enums.Align;
 import model.out.fomat.table.Cell;
-import model.util.GlobalUtility;
+import model.util.type.ObjectPlus;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -20,7 +22,7 @@ import java.util.List;
  * doesn't want to be manipulated by any entity and is read-only!
  */
 public class ValidatorConfig {
-    // logarithmic times
+    // validator times
     private int times;
     // The class object of the class of the methods to be tested,
     // 'validator method' and 'compare method'
@@ -33,6 +35,19 @@ public class ValidatorConfig {
     // How to compare the result set, only the
     // value, or the value and UUID (simulated address)
     private boolean comparison;
+
+
+    public long testStart = 0;
+    public long testEnd = 0;
+    public long validatorStart = 0;
+    public long compareStart = 0;
+    public long validatorMinimum = 0;
+    public long validatorMaximum = 0;
+    public long validatorTotal = 0;
+
+    public long compareMinimum = 0;
+    public long compareMaximum = 0;
+    public long compareTotal = 0;
 
     // constructor
     public ValidatorConfig(int times, Class<?> clazz, String validatorMethod, String compareMethod, boolean comparison) {
@@ -87,7 +102,7 @@ public class ValidatorConfig {
         m1.add(new Cell(Align.CENTER, comparison ? "uuid" : "value"));
         body.add(m1);
 
-        return GlobalUtility.RED + "\nThe following test information is displayed\n"
-                + GlobalUtility.RESET + new ConsoleTable.ConsoleTableBuilder().addHeaders(header).addRows(body).build().toString();
+        return Out.RED + "\nThe following test information is displayed\n"
+                + Out.RESET + new ConsoleTable.ConsoleTableBuilder().addHeaders(header).addRows(body).build().toString();
     }
 }

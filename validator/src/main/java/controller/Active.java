@@ -4,9 +4,7 @@ import model.config.ValidatorConfig;
 import model.out.Out;
 import model.reflect.ReflectiveInvoker;
 import model.sample.Argument;
-import model.util.GlobalUtility;
 
-import static model.util.GlobalUtility.testStart;
 
 /**
  * <p>
@@ -35,11 +33,9 @@ public class Active {
             throw new IllegalArgumentException("arguments is null!");
         }
 
-        if (testStart == 0) {
-            testStart = System.currentTimeMillis();
+        if (config.testStart == 0) {
+            config.testStart = System.currentTimeMillis();
         }
-
-        GlobalUtility.arguments = arguments;
 
         // Partial information about the parameters is obtained through reflection
         for (int i = 0; i < arguments.length; i++) {
@@ -54,7 +50,7 @@ public class Active {
 
         // start !
         boolean result = new Validator().verification(config, arguments);
-        GlobalUtility.testEnd = System.currentTimeMillis();
+        config.testEnd = System.currentTimeMillis();
 
         // if success display success log!
         if (result) {

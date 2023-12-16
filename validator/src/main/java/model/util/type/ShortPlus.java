@@ -1,7 +1,6 @@
 package model.util.type;
 
 import model.range.Range;
-import model.util.GlobalUtility;
 
 import java.util.UUID;
 
@@ -22,7 +21,7 @@ public class ShortPlus extends ObjectPlus<Short, ShortPlus> {
 
     public ShortPlus(Range range) {
         this.setUuid(String.valueOf(UUID.randomUUID()));
-        this.value = (short) GlobalUtility.getRandomMinToMax(range);
+        this.value = (short) Range.getRandomMinToMax(range);
     }
 
 }

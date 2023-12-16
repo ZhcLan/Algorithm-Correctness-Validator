@@ -1,18 +1,17 @@
 package controller;
 
 import model.config.ValidatorConfig;
+import model.out.Out;
 import model.out.progress.ProgressBar;
 import model.range.Range;
 import model.reflect.ReflectiveInvoker;
 import model.sample.Argument;
 import model.sample.Sample;
-import model.util.GlobalUtility;
 import model.util.ListNode;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static model.util.GlobalUtility.*;
 
 /**
  * The main control logic of the logarithmic
@@ -22,12 +21,13 @@ import static model.util.GlobalUtility.*;
 public class Validator {
     /**
      * Start validating your methods and provide real-time feedback
+     *
      * @param config    test arguments
      * @param arguments parameter arguments
      * @return return whether the result set is 'equal'
      */
     public boolean verification(ValidatorConfig config, Argument... arguments) {
-        System.out.println("\n" + GlobalUtility.RED + "测试中,当前进度:" + GlobalUtility.RESET);
+        System.out.println("\n" + Out.RED + "测试中,当前进度:" + Out.RESET);
         ProgressBar progressBar = new ProgressBar(config.getTimes(), 100);
         for (int i = 0; i < config.getTimes(); i++) {
             progressBar.update(i);
@@ -35,11 +35,11 @@ public class Validator {
             Range[][] values = new Range[arguments.length][];
             Sample.combination(volume, values, arguments);
             // generate random logarithmic sample
-            Sample sample = new Sample(config, volume, values);
+            Sample sample = new Sample(config, arguments, volume, values);
 
             // If you need to observe the input of production, please break it here
-            if (GlobalUtility.validatorStart == 0) {
-                GlobalUtility.validatorStart = System.currentTimeMillis();
+            if (config.validatorStart == 0) {
+                config.validatorStart = System.currentTimeMillis();
             }
 
             long start = System.currentTimeMillis();
@@ -47,18 +47,18 @@ public class Validator {
             Object result1 = ReflectiveInvoker.call(config.getClazz(), config.getValidatorMethod(), sample.validatorSample);
 
             long end = System.currentTimeMillis();
-            validatorTotal += (end - start);
+            config.validatorTotal += (end - start);
 
-            if (end - start > validatorMaximum) {
-                validatorMaximum = (end - start);
+            if (end - start > config.validatorMaximum) {
+                config.validatorMaximum = (end - start);
             }
 
-            if (end - start < validatorMinimum) {
-                validatorMinimum = (end - start);
+            if (end - start < config.validatorMinimum) {
+                config.validatorMinimum = (end - start);
             }
 
-            if (compareStart == 0) {
-                compareStart = System.currentTimeMillis();
+            if (config.compareStart == 0) {
+                config.compareStart = System.currentTimeMillis();
             }
             long start1 = System.currentTimeMillis();
 
@@ -67,13 +67,13 @@ public class Validator {
 
             long end1 = System.currentTimeMillis();
 
-            compareTotal += (end1 - start1);
-            if (end1 - start1 > compareMaximum) {
-                compareMaximum = (end1 - start1);
+            config.compareTotal += (end1 - start1);
+            if (end1 - start1 > config.compareMaximum) {
+                config.compareMaximum = (end1 - start1);
             }
 
-            if (end1 - start1 < compareMinimum) {
-                compareMinimum = (end1 - start1);
+            if (end1 - start1 < config.compareMinimum) {
+                config.compareMinimum = (end1 - start1);
             }
 
             // conversion test result is List

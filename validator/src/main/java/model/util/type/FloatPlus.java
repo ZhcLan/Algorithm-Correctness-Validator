@@ -1,7 +1,6 @@
 package model.util.type;
 
 import model.range.Range;
-import model.util.GlobalUtility;
 
 import java.util.UUID;
 
@@ -22,7 +21,7 @@ public class FloatPlus extends ObjectPlus<Float, FloatPlus> {
 
     public FloatPlus(Range range) {
         this.setUuid(String.valueOf(UUID.randomUUID()));
-        this.value = (float) GlobalUtility.getRandomMinToMax(range);
+        this.value = (float) Range.getRandomMinToMax(range);
     }
 
 }

@@ -53,7 +53,6 @@ public class Argument {
     public void setTypeStr(String typeStr) {
         this.typeStr = typeStr;
     }
-
     public boolean isOrder() {
         return isOrder;
     }
