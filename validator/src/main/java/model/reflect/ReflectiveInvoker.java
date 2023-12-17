@@ -3,6 +3,7 @@ package model.reflect;
 import model.range.Range;
 
 import java.lang.reflect.*;
+import java.util.Collection;
 
 /**
  * The reflection method is encapsulated to provide support for getting the relevant

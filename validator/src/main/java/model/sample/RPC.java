@@ -1,9 +1,11 @@
 package model.sample;
 
 import model.config.ValidatorConfig;
+import model.out.BinaryTreePrinter;
 import model.range.Fate;
 import model.range.Range;
 import model.reflect.ReflectiveInvoker;
+import model.util.TreeNode;
 import model.util.type.ObjectPlus;
 import model.util.type.StringPlus;
 
@@ -199,17 +201,21 @@ public class RPC {
                 Range random = values[index][used];
                 if (root.getTypeName().contains("String")) {
                     int len = (int) Range.getRandomMinToMax(volume[index][used]);
+                    if(len == 0) {
+                        return new Object[]{null,null};
+                    }
                     ret[0] = new StringPlus(random, len);
                     ret[1] = StringPlus.clone((StringPlus) (ret[0]));
+                    error.append(ret[0]);
                 } else {
                     if (fate != null) {
                         ret[0] = ReflectiveInvoker.getInstance(root.getTypeName(), fate);
-                        error.append(ret[0] + "");
+                        error.append(ret[0]);
                         // Restore the site
                         fate = null;
                     } else {
                         ret[0] = ReflectiveInvoker.getInstance(root.getTypeName(), random);
-                        error.append(ret[0] + "");
+                        error.append(ret[0]);
                     }
                     ret[1] = ObjectPlus.clone(root.getTypeName(), ret[0]);
                 }
@@ -232,6 +238,9 @@ public class RPC {
 
             int count = 0;
             int size = (int) Range.getRandomMinToMax(volume[index][used]);
+            if(size == 0) {
+                return new Object[]{null,null};
+            }
             error.append("[");
             while (count < size) {
                 Object[] rightKey;
@@ -262,6 +271,9 @@ public class RPC {
             ArrayList<Object> list2 = new ArrayList<>();
             int count = 0;
             int size = (int) Range.getRandomMinToMax(volume[index][used]);
+            if(size == 0) {
+                return new Object[]{null,null};
+            }
             Fate fateful = arguments[index].getVolume()[used].getFate();
             if (fateful != null) {
                 int total = 0;
@@ -312,8 +324,15 @@ public class RPC {
                 list1.sort((o1, o2) -> ((ObjectPlus<?, ?>) o1).compareTo(o2));
                 list2.sort((o1, o2) -> ((ObjectPlus<?, ?>) o1).compareTo(o2));
             }
-            col1.addAll(list1);
-            col2.addAll(list2);
+            if (col1 instanceof TreeNode) {
+                Object[] tree = new TreeNode().buildDoubleBinaryTree(list1,list2);
+                col1 = (Collection<Object>) tree[0];
+                col2 = (Collection<Object>) tree[1];
+                return new Object[]{col1,col2};
+            } else {
+                col1.addAll(list1);
+                col2.addAll(list2);
+            }
         }
         return ret;
     }

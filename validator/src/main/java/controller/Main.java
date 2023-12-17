@@ -109,7 +109,7 @@ public class Main {
     public static void main(String[] args) {
 
         ValidatorConfig config = new ValidatorConfig(1_0000, Main.class, "selectSort",
-                "insertSort", true);
+                "insertSort", false);
         Argument arguments = new Argument(
                 // Note that due to the recursive parsing of the parameters,
                 // the last of the volume here will not be used,

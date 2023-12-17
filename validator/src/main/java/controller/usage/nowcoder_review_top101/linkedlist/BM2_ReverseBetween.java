@@ -54,7 +54,7 @@ public class BM2_ReverseBetween {
         Argument argument0 = new Argument(
                 new Range[]{
                         // 这里的范围是闭区间,题目给的是(0,1000]
-                        new Range(1, 1000),       // 按照题目要求确定范围(1,100]范围内产生节点数量
+                        new Range(1, 1000),       // 按照题目要求确定范围(1,1000]范围内产生节点数量
                         new Range(-1, -1)},        // 占位
                 new Range[]{
                         new Range(-1, -1),        // 占位

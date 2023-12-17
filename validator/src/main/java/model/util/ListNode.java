@@ -112,6 +112,10 @@ public class ListNode<E> implements Collection<E> {
         while (x.next != null) {
             x = x.next;
         }
+        if (this.val == null && size() > 1) {
+            this.val = this.next.val;
+            this.next = this.next.next;
+        }
 
         x.next = new ListNode<>((E) o, null);
         return true;
@@ -138,9 +142,9 @@ public class ListNode<E> implements Collection<E> {
     }
 
     @Override
-    public boolean addAll(Collection c) {
-        for (Object o : c) {
-            add(o);
+    public boolean addAll(Collection<? extends E> c) {
+        for (E e : c) {
+            add(e);
         }
         // At the right time,discard virtual head nodes!
         if (this.val == null && size() > 1) {

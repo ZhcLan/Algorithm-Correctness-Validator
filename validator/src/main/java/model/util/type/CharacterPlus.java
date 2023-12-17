@@ -26,4 +26,23 @@ public class CharacterPlus extends ObjectPlus<Character, CharacterPlus> {
     public static Character getRandomChar(Range range) {
         return new CharacterPlus(range).value;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (o == null && this != null) {
+            return false;
+        }
+
+        if (o == null && this == null) {
+            return true;
+        }
+
+        ObjectPlus cmpObj1 = (ObjectPlus) o;
+        ObjectPlus cmpObj2 =  this;
+
+        if (cmpObj1.value.equals(cmpObj2.value)) {
+            return true;
+        }
+
+        return false;
+    }
 }

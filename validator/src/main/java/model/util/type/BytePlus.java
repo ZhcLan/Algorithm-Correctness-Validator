@@ -24,4 +24,23 @@ public class BytePlus extends ObjectPlus<Byte, BytePlus> {
         this.value = (byte) Range.getRandomMinToMax(range);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null && this != null) {
+            return false;
+        }
+
+        if (o == null && this == null) {
+            return true;
+        }
+
+        ObjectPlus cmpObj1 = (ObjectPlus) o;
+        ObjectPlus cmpObj2 =  this;
+
+        if (cmpObj1.value.equals(cmpObj2.value)) {
+            return true;
+        }
+
+        return false;
+    }
 }
