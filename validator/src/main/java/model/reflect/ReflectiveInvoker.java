@@ -1,5 +1,6 @@
 package model.reflect;
 
+import model.range.DataSet;
 import model.range.Range;
 
 import java.lang.reflect.*;
@@ -35,7 +36,7 @@ public class ReflectiveInvoker {
         return method;
     }
 
-    public static Object getInstance(String classObjectStr, Range range) throws ClassNotFoundException {
+    public static Object getInstance(String classObjectStr, DataSet set, Range range) throws ClassNotFoundException {
         Class<?> clazz = Class.forName(classObjectStr);
         Object ret;
         Constructor<?> constructor;
@@ -43,8 +44,11 @@ public class ReflectiveInvoker {
         try {
             if (range == null) {
                 constructor = clazz.getDeclaredConstructor();
-            } else {
+            } else if (set == null) {
                 constructor = clazz.getDeclaredConstructor(Range.class);
+            } else {
+                constructor = clazz.getDeclaredConstructor(DataSet.class, Range.class);
+
             }
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("Failed to construct an instance:" + clazz.getName() + "there is no Range construct for this class!!");
@@ -55,11 +59,13 @@ public class ReflectiveInvoker {
         try {
             if (range == null) {
                 ret = constructor.newInstance();
-            } else {
+            } else if (set == null) {
                 ret = constructor.newInstance(range);
+            } else {
+                ret = constructor.newInstance(set, range);
             }
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException("The call to the Range constructor failed, and the class is :" + clazz.getName() + ",please check!");
+            throw new RuntimeException("The call to the suitable constructor failed, and the class is :" + clazz.getName() + ",please check!");
         }
         return ret;
     }

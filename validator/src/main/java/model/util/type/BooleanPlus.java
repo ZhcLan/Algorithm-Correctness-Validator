@@ -1,5 +1,6 @@
 package model.util.type;
 
+import model.range.DataSet;
 import model.range.Range;
 
 import java.util.UUID;
@@ -22,6 +23,21 @@ public class BooleanPlus extends ObjectPlus<Boolean, BooleanPlus> {
         this.setUuid(String.valueOf(UUID.randomUUID()));
         this.value = getRandomBoolean(range);
     }
+
+
+    /**
+     * 请保证 set 不为空
+     *
+     * @param set
+     * @param range
+     */
+
+    public BooleanPlus(DataSet set, Range range) {
+        this.setUuid(String.valueOf(UUID.randomUUID()));
+        int randomIndex = (int) Range.getRandomMinToMax(range);
+        this.value = (Boolean) set.getSet()[randomIndex];
+    }
+
 
     // if random < 0 return false
     // if random > 0 return true
@@ -47,7 +63,7 @@ public class BooleanPlus extends ObjectPlus<Boolean, BooleanPlus> {
         }
 
         ObjectPlus cmpObj1 = (ObjectPlus) o;
-        ObjectPlus cmpObj2 =  this;
+        ObjectPlus cmpObj2 = this;
 
         if (cmpObj1.value.equals(cmpObj2.value)) {
             return true;

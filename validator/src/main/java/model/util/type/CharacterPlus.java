@@ -1,5 +1,6 @@
 package model.util.type;
 
+import model.range.DataSet;
 import model.range.Range;
 
 import java.util.UUID;
@@ -23,9 +24,16 @@ public class CharacterPlus extends ObjectPlus<Character, CharacterPlus> {
         this.value = (char) Range.getRandomMinToMax(range);
     }
 
+    public CharacterPlus(DataSet set, Range range) {
+        this.setUuid(String.valueOf(UUID.randomUUID()));
+        int randomIndex = (int) Range.getRandomMinToMax(range);
+        this.value = (Character) set.getSet()[randomIndex];
+    }
+
     public static Character getRandomChar(Range range) {
         return new CharacterPlus(range).value;
     }
+
     @Override
     public boolean equals(Object o) {
         if (o == null && this != null) {
@@ -37,7 +45,7 @@ public class CharacterPlus extends ObjectPlus<Character, CharacterPlus> {
         }
 
         ObjectPlus cmpObj1 = (ObjectPlus) o;
-        ObjectPlus cmpObj2 =  this;
+        ObjectPlus cmpObj2 = this;
 
         if (cmpObj1.value.equals(cmpObj2.value)) {
             return true;

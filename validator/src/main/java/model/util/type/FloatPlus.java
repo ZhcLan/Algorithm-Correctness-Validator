@@ -1,5 +1,6 @@
 package model.util.type;
 
+import model.range.DataSet;
 import model.range.Range;
 
 import java.util.UUID;
@@ -23,6 +24,14 @@ public class FloatPlus extends ObjectPlus<Float, FloatPlus> {
         this.setUuid(String.valueOf(UUID.randomUUID()));
         this.value = (float) Range.getRandomMinToMax(range);
     }
+
+    public FloatPlus(DataSet set, Range range) {
+        this.setUuid(String.valueOf(UUID.randomUUID()));
+        int randomIndex = (int) Range.getRandomMinToMax(range);
+        this.value = (Float) set.getSet()[randomIndex];
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null && this != null) {
@@ -34,7 +43,7 @@ public class FloatPlus extends ObjectPlus<Float, FloatPlus> {
         }
 
         ObjectPlus cmpObj1 = (ObjectPlus) o;
-        ObjectPlus cmpObj2 =  this;
+        ObjectPlus cmpObj2 = this;
 
         if (cmpObj1.value.equals(cmpObj2.value)) {
             return true;

@@ -1,5 +1,6 @@
 package model.util.type;
 
+import model.range.DataSet;
 import model.range.Range;
 import model.reflect.ReflectiveInvoker;
 
@@ -67,6 +68,14 @@ public class ObjectPlus<E extends Comparable, T extends ObjectPlus<?, ?>> implem
     }
 
     /**
+     * In the dataset, get random data for the range index
+     *
+     * @param set   data set
+     * @param range indexing range
+     */
+
+
+    /**
      * Make sure subclasses override this construct method
      * <p>
      * This construct is the basis for recursively creating
@@ -78,6 +87,10 @@ public class ObjectPlus<E extends Comparable, T extends ObjectPlus<?, ?>> implem
      * @param range range of maybe value
      */
     public ObjectPlus(Range range) {
+        // ... ...
+    }
+
+    public ObjectPlus(DataSet set, Range range) {
         // ... ...
     }
 
@@ -94,7 +107,7 @@ public class ObjectPlus<E extends Comparable, T extends ObjectPlus<?, ?>> implem
         ObjectPlus ret = null;
         try {
             ObjectPlus<?, ?> o = (ObjectPlus<?, ?>) obj;
-            ret = (ObjectPlus<?, ?>) ReflectiveInvoker.getInstance(typeStr, null);
+            ret = (ObjectPlus<?, ?>) ReflectiveInvoker.getInstance(typeStr, null, null);
             ret.uuid = o.uuid;
             ret.value = o.value;
         } catch (ClassNotFoundException e) {

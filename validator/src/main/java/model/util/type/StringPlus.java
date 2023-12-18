@@ -1,5 +1,6 @@
 package model.util.type;
 
+import model.range.DataSet;
 import model.range.Range;
 
 import java.util.UUID;
@@ -27,6 +28,15 @@ public class StringPlus extends ObjectPlus<String, StringPlus> {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < len; i++) {
             stringBuilder.append(CharacterPlus.getRandomChar(range));
+        }
+        this.value = stringBuilder.toString();
+    }
+
+    public StringPlus(DataSet set,Range range, int len) {
+        this.setUuid(String.valueOf(UUID.randomUUID()));
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            stringBuilder.append(new CharacterPlus(set,range).value);
         }
         this.value = stringBuilder.toString();
     }

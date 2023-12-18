@@ -1,7 +1,7 @@
 package model.sample;
 
 import model.config.ValidatorConfig;
-import model.out.BinaryTreePrinter;
+import model.range.DataSet;
 import model.range.Fate;
 import model.range.Range;
 import model.reflect.ReflectiveInvoker;
@@ -12,13 +12,15 @@ import model.util.type.StringPlus;
 import java.lang.reflect.*;
 import java.util.*;
 
+
+
+
 /**
  * RPC: random parameter constructor
  * Based on the parameter template(courtesy of Reflection),
  * random test parameters are generated
  */
 public class RPC {
-
     /**
      * RPC Entry Method -> Construct a quasi-script environment for RSC
      *
@@ -115,8 +117,8 @@ public class RPC {
         try {
             // Map or Collection
             // create root
-            ret[0] = ReflectiveInvoker.getInstance(((ParameterizedType) root).getRawType().getTypeName(), null);
-            ret[1] = ReflectiveInvoker.getInstance(((ParameterizedType) root).getRawType().getTypeName(), null);
+            ret[0] = ReflectiveInvoker.getInstance(((ParameterizedType) root).getRawType().getTypeName(), null, null);
+            ret[1] = ReflectiveInvoker.getInstance(((ParameterizedType) root).getRawType().getTypeName(), null, null);
         } catch (ClassCastException e) {
             if (root instanceof GenericArrayType) {
                 // Generic Array
@@ -188,33 +190,39 @@ public class RPC {
                         Arrays.sort((Object[]) array1);
                         Arrays.sort((Object[]) array2);
                     }
-
                 } catch (Exception eSort) {
                     System.out.println("sort fail,please don't sort complex parameters");
                 }
-
                 ret[0] = array1;
                 ret[1] = array2;
             } else {
                 // leaf -> Plus Type
                 // special process if types is string plus type
+
                 Range random = values[index][used];
                 if (root.getTypeName().contains("String")) {
+                    DataSet set = volume[index][used].getDataSet();
                     int len = (int) Range.getRandomMinToMax(volume[index][used]);
-                    if(len == 0) {
-                        return new Object[]{null,null};
+                    if (len == 0) {
+                        return new Object[]{null, null};
                     }
-                    ret[0] = new StringPlus(random, len);
+
+                    if (set == null) {
+                        ret[0] = new StringPlus(random, len);
+                    } else {
+                        ret[0] = new StringPlus(set, random, len);
+                    }
                     ret[1] = StringPlus.clone((StringPlus) (ret[0]));
                     error.append(ret[0]);
                 } else {
+                    DataSet set = volume[index][used - 1].getDataSet();
                     if (fate != null) {
-                        ret[0] = ReflectiveInvoker.getInstance(root.getTypeName(), fate);
+                        ret[0] = ReflectiveInvoker.getInstance(root.getTypeName(), set, fate);
                         error.append(ret[0]);
                         // Restore the site
                         fate = null;
                     } else {
-                        ret[0] = ReflectiveInvoker.getInstance(root.getTypeName(), random);
+                        ret[0] = ReflectiveInvoker.getInstance(root.getTypeName(), set, random);
                         error.append(ret[0]);
                     }
                     ret[1] = ObjectPlus.clone(root.getTypeName(), ret[0]);
@@ -238,8 +246,8 @@ public class RPC {
 
             int count = 0;
             int size = (int) Range.getRandomMinToMax(volume[index][used]);
-            if(size == 0) {
-                return new Object[]{null,null};
+            if (size == 0) {
+                return new Object[]{null, null};
             }
             error.append("[");
             while (count < size) {
@@ -271,8 +279,8 @@ public class RPC {
             ArrayList<Object> list2 = new ArrayList<>();
             int count = 0;
             int size = (int) Range.getRandomMinToMax(volume[index][used]);
-            if(size == 0) {
-                return new Object[]{null,null};
+            if (size == 0) {
+                return new Object[]{null, null};
             }
             Fate fateful = arguments[index].getVolume()[used].getFate();
             if (fateful != null) {
@@ -325,10 +333,10 @@ public class RPC {
                 list2.sort((o1, o2) -> ((ObjectPlus<?, ?>) o1).compareTo(o2));
             }
             if (col1 instanceof TreeNode) {
-                Object[] tree = new TreeNode().buildDoubleBinaryTree(list1,list2);
+                Object[] tree = new TreeNode().buildDoubleBinaryTree(list1, list2);
                 col1 = (Collection<Object>) tree[0];
                 col2 = (Collection<Object>) tree[1];
-                return new Object[]{col1,col2};
+                return new Object[]{col1, col2};
             } else {
                 col1.addAll(list1);
                 col2.addAll(list2);

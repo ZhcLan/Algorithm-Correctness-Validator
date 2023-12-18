@@ -1,6 +1,7 @@
 package controller;
 
 import model.config.ValidatorConfig;
+import model.range.DataSet;
 import model.range.Range;
 import model.sample.Argument;
 import model.util.type.IntegerPlus;
@@ -27,6 +28,7 @@ public class Main {
         }
         return arr;
     }
+
     public static IntegerPlus[] bubbleSort(IntegerPlus[] arr) {
         if (arr == null || arr.length < 2) {
             return arr;
@@ -114,12 +116,14 @@ public class Main {
                 // Note that due to the recursive parsing of the parameters,
                 // the last of the volume here will not be used,
                 // but it needs to be stationed!
-                new Range[]{new Range(5, 8), new Range(-1, -1)},
+                new Range[]{new Range(5, 8, DataSet.number), new Range(-1, -1)},
                 // If the root node of the parameter is of type Plus,
                 // then the values are valid from the first digit (index 0).
                 // Otherwise, if the root node of the parameter is not of type Plus,
                 // then the values are valid from the second digit, and the first digit is used to stand!
-                new Range[]{new Range(-1, -1), new Range(-200, 200)}
+
+                // 随机索引的范围
+                new Range[]{new Range(-1, -1), new Range(0, 9)}
         );
         // startup!
         new Active().active(config, arguments);

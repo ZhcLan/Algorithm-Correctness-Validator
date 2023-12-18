@@ -1,5 +1,6 @@
 package model.util.type;
 
+import model.range.DataSet;
 import model.range.Range;
 
 import java.util.UUID;
@@ -23,6 +24,14 @@ public class ShortPlus extends ObjectPlus<Short, ShortPlus> {
         this.setUuid(String.valueOf(UUID.randomUUID()));
         this.value = (short) Range.getRandomMinToMax(range);
     }
+
+    public ShortPlus(DataSet set, Range range) {
+        this.setUuid(String.valueOf(UUID.randomUUID()));
+        int randomIndex = (int) Range.getRandomMinToMax(range);
+        this.value = (Short) set.getSet()[randomIndex];
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (o == null && this != null) {
@@ -34,7 +43,7 @@ public class ShortPlus extends ObjectPlus<Short, ShortPlus> {
         }
 
         ObjectPlus cmpObj1 = (ObjectPlus) o;
-        ObjectPlus cmpObj2 =  this;
+        ObjectPlus cmpObj2 = this;
 
         if (cmpObj1.value.equals(cmpObj2.value)) {
             return true;

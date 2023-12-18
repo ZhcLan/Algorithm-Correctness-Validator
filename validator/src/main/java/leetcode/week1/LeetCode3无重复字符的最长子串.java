@@ -2,6 +2,7 @@ package leetcode.week1;
 
 import controller.Active;
 import model.config.ValidatorConfig;
+import model.range.DataSet;
 import model.range.Range;
 import model.sample.Argument;
 import model.util.type.IntegerPlus;
@@ -77,12 +78,14 @@ public class LeetCode3无重复字符的最长子串 {
 
         Argument argument = new Argument(
                 new Range[]{
-                        new Range(0, 5 * 10_0000),
+                        new Range(0, 5 * 10_0000, DataSet.lowercase),
                         new Range(-1, -1)
                 },
+
                 new Range[]{
                         // 字符串是叶子!
-                        new Range(0, 127), // 字符串会自动生成
+                        // 随机索引的范围
+                        new Range(0, 25),
                         new Range(-1, -1)
                 }
         );
