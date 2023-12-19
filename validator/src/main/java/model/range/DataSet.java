@@ -8,7 +8,6 @@ import java.util.Arrays;
 public class DataSet {
     // read only
     // 请使用引用类型,而不要使用基本数据类型
-    // 并未对字符创作出适配
     private Object[] set;
 
     public DataSet(Object[] set) {
