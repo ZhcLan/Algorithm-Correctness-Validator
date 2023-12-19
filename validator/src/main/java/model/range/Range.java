@@ -1,12 +1,5 @@
 package model.range;
 
-/*
- * 优化结果集 DataSet  -> It's ok , to be tested
- * 链表的长度为1时的特殊情况处理
- * 优化排序,Fate特殊值
- */
-
-
 /**
  * Use Range, which allows the user to specify
  * the range of data and the range of values
